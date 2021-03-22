@@ -17,7 +17,7 @@ class ProductController extends Controller
     {
         $products = Product::all();
 
-        return response()->json($products);
+        return response()->json($products, 200);
     }
 
     /**
@@ -27,8 +27,13 @@ class ProductController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        
+    {   
+        $product = new Product;
+        $product->name = $request->name;
+        $product->type = $request->type;
+        $product->save();
+
+        return response()->json($product, 200);
     }
 
     /**
@@ -37,9 +42,15 @@ class ProductController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function show(Product $product)
+    public function show($id)
     {
-        //
+        $product = Product::find($id);
+
+        if ($product) {
+            return response()->json($product, 200);
+        } else {
+            return response()->json(['message' => 'Product not found!'], 404);
+        }
     }
 
     /**
@@ -49,9 +60,20 @@ class ProductController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Product $product)
+    public function update(Request $request, $id)
     {
-        //
+        $product = Product::find($id);
+
+        if ($product) {
+            $product->name = $request->name;
+            $product->type = $request->type;
+            $product->quantity = $request->quantity;
+            $product->update();
+
+            return response()->json($product, 200);
+        } else {
+            return response()->json(['message' => 'Product not found!'], 404);
+        }
     }
 
     /**
@@ -60,8 +82,16 @@ class ProductController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Product $product)
+    public function destroy($id)
     {
-        //
+        $product = Product::find($id);
+
+        if ($product) {
+            $product->delete();
+
+            return response()->json(['message' => 'Product deleted!'], 200);
+        } else {
+            return response()->json(['message' => 'Product not found!'], 404);
+        }
     }
 }
