@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\ProductCollection;
 use App\Http\Resources\Api\ProductResource;
 use App\Models\Product;
+use App\Utils\Calculate;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -132,17 +133,20 @@ class ProductController extends Controller
     {
         try {
             $request->validate([
-                'quantity' => 'required|integer|min:0'
+                'quantity' => 'required|integer'
             ]);
             $product = Product::find($id);
+            $calculate = new Calculate($product->quantity);
     
             if (!$product) {
                 return response()->json(['message' => 'Product not found!'], 404);
             }
+        
+            $incrementedQuantity = $calculate->increment($request->quantity);
             $product->update([
-                'quantity' => $product->quantity + $request->quantity
+                'quantity' => $incrementedQuantity
             ]);
-    
+            
             return new ProductResource($product);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);

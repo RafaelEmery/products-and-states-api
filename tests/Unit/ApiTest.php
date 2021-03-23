@@ -2,19 +2,32 @@
 
 namespace Tests\Unit;
 
-use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 class ApiTest extends TestCase
 {
+    const API_URI = 'api/v1/test';
+
     /**
-     * Testing request status to an external IGBE api.
+     * Testing successful get request to external API. 
      * 
      * @return void
      */
     public function test_making_get_request_to_external_api()
     {
-        $response = Http::get('https://servicodados.ibge.gov.br/api/v1/localidades/estados');
-        $response->getStatusCode();
+        $response = $this->get(self::API_URI . '/success-request');
+        $response->assertStatus(200);
+    }
+
+    /**
+     * Testing wrong get request to external API.
+     * 
+     * @return void
+     */
+    public function test_making_wrong_get_request_to_external_api()
+    {
+        $response = $this->get(self::API_URI . '/error-request');
+        $response->assertStatus(500);
     }
 }
+

@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\State;
-use App\Services\States as StatesApi;
+use App\Services\Api as StatesApi;
 use Illuminate\Database\Seeder;
 
 class StateSeeder extends Seeder
