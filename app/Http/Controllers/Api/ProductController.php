@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
+use App\Http\Resources\Api\ProductCollection;
+use App\Http\Resources\Api\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -19,7 +21,7 @@ class ProductController extends Controller
     {
         $products = Product::all();
 
-        return response()->json($products);
+        return new ProductCollection($products);
     }
 
     /**
@@ -28,14 +30,15 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreProductRequest $request)
+    public function store(Request $request)
     {   
         $product = new Product;
         $product->name = $request->name;
         $product->type = $request->type;
+        $product->quantity = 0;
         $product->save();
 
-        return response()->json($product, 200);
+        return new ProductResource($product);
     }
 
     /**
@@ -49,7 +52,7 @@ class ProductController extends Controller
         $product = Product::find($id);
 
         if ($product) {
-            return response()->json($product, 200);
+            return new ProductResource($product);
         } else {
             return response()->json(['message' => 'Produto não encontrado!'], 404);
         }
@@ -62,7 +65,7 @@ class ProductController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateProductRequest $request, $id)
+    public function update(Request $request, $id)
     {
         $product = Product::find($id);
 
@@ -72,7 +75,7 @@ class ProductController extends Controller
             $product->quantity = $product->quantity + $request->quantity;
             $product->update();
 
-            return response()->json($product, 200);
+            return new ProductResource($product);
         } else {
             return response()->json(['message' => 'Produto não encontrado!'], 404);
         }
