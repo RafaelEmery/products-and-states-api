@@ -17,7 +17,7 @@ class CreateProductsTable extends Migration
             $table->id();
             $table->string('name');
             $table->enum('type', ['Cesta Básica', 'Limpeza', 'Doces', 'Carnes', 'Higiene Pessoal']);
-            $table->unsignedBigInteger('quantity')->default(0);
+            $table->unsignedBigInteger('quantity');
             $table->timestamps();
         });
     }

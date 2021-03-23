@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Api\StateCollection;
 use App\Models\State;
-use Illuminate\Http\Request;
 
 class StateController extends Controller
 {
@@ -15,8 +15,16 @@ class StateController extends Controller
      */
     public function index()
     {
-        $states = State::all();
+        try {
+            $states = State::all();
 
-        return response()->json($states);
+            if (!$states) {
+                return response()->json(['message' => 'No states on database!'], 404);
+            }
+            return new StateCollection($states);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+        
     }
 }

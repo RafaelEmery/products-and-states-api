@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreProductRequest;
-use App\Http\Requests\UpdateProductRequest;
 use App\Http\Resources\Api\ProductCollection;
 use App\Http\Resources\Api\ProductResource;
 use App\Models\Product;
@@ -19,9 +17,16 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::all();
+        try {
+            $products = Product::all();
 
-        return new ProductCollection($products);
+            if (!$products) {
+                return response()->json(['message' => 'No products on database!'], 404);
+            }
+            return new ProductCollection($products);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
     /**
@@ -32,13 +37,22 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {   
-        $product = new Product;
-        $product->name = $request->name;
-        $product->type = $request->type;
-        $product->quantity = 0;
-        $product->save();
+        try {
+            $request->validate([
+                'name' => 'required|max:120',
+                'type' => 'required|in:Cesta Básica, Limpeza, Doces, Carnes, Higiene Pessoal',
+            ]);
 
-        return new ProductResource($product);
+            $product = new Product;
+            $product->name = $request->name;
+            $product->type = $request->type;
+            $product->quantity = 0;
+            $product->save();
+    
+            return new ProductResource($product);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
     /**
@@ -49,12 +63,15 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        $product = Product::find($id);
+        try {
+            $product = Product::find($id);
 
-        if ($product) {
+            if (!$product) {
+                return response()->json(['message' => 'Product not found!'], 404);
+            } 
             return new ProductResource($product);
-        } else {
-            return response()->json(['message' => 'Produto não encontrado!'], 404);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -67,17 +84,26 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $product = Product::find($id);
+        try {
+            $request->validate([
+                'name' => 'required|max:120',
+                'type' => 'required|in:Cesta Básica, Limpeza, Doces, Carnes, Higiene Pessoal',
+                'quatity' => 'integer'
+            ]);
 
-        if ($product) {
+            $product = Product::find($id);
+
+            if (!$product) {
+                return response()->json(['message' => 'Product not found!'], 404);
+            }
             $product->name = $request->name;
             $product->type = $request->type;
             $product->quantity = $product->quantity + $request->quantity;
             $product->update();
 
             return new ProductResource($product);
-        } else {
-            return response()->json(['message' => 'Produto não encontrado!'], 404);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -89,14 +115,17 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        $product = Product::find($id);
+        try {
+            $product = Product::find($id);
 
-        if ($product) {
+            if (!$product) {
+                return response()->json(['message' => 'Product not found!'], 404);
+            } 
             $product->delete();
 
-            return response()->json(['message' => 'Produto deletado!'], 200);
-        } else {
-            return response()->json(['message' => 'Produto não encontrado!'], 404);
+            return response()->json(['message' => 'Product deleted!'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 }
