@@ -18,7 +18,7 @@ class StateController extends Controller
         try {
             $states = State::all();
 
-            if (!$states) {
+            if ($states->count() == 0) {
                 return response()->json(['message' => 'No states on database!'], 404);
             }
             return new StateCollection($states);

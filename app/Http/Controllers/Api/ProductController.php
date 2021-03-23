@@ -20,7 +20,7 @@ class ProductController extends Controller
         try {
             $products = Product::all();
 
-            if (!$products) {
+            if ($products->count() == 0) {
                 return response()->json(['message' => 'No products on database!'], 404);
             }
             return new ProductCollection($products);
@@ -39,15 +39,11 @@ class ProductController extends Controller
     {   
         try {
             $request->validate([
-                'name' => 'required|max:120',
-                'type' => 'required|in:Cesta Básica, Limpeza, Doces, Carnes, Higiene Pessoal',
+                'name' => 'required|string|max:120',
+                'type' => 'required|string|max:20',
+                'quantity' => 'required|integer|min:0'
             ]);
-
-            $product = new Product;
-            $product->name = $request->name;
-            $product->type = $request->type;
-            $product->quantity = 0;
-            $product->save();
+            $product = Product::create($request->all());
     
             return new ProductResource($product);
         } catch (\Exception $e) {
@@ -58,7 +54,7 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Product  $product
+     * @param  $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -79,27 +75,23 @@ class ProductController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Product  $product
+     * @param  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
         try {
             $request->validate([
-                'name' => 'required|max:120',
-                'type' => 'required|in:Cesta Básica, Limpeza, Doces, Carnes, Higiene Pessoal',
-                'quatity' => 'integer'
+                'name' => 'required|string|max:120',
+                'type' => 'required|string|max:20',
+                'quantity' => 'required|integer|min:0'
             ]);
-
             $product = Product::find($id);
 
             if (!$product) {
                 return response()->json(['message' => 'Product not found!'], 404);
             }
-            $product->name = $request->name;
-            $product->type = $request->type;
-            $product->quantity = $product->quantity + $request->quantity;
-            $product->update();
+            $product->update($request->all());
 
             return new ProductResource($product);
         } catch (\Exception $e) {
@@ -110,7 +102,7 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Product  $product
+     * @param  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
@@ -124,6 +116,34 @@ class ProductController extends Controller
             $product->delete();
 
             return response()->json(['message' => 'Product deleted!'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Increments the quantity of a single product.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function increments(Request $request, $id)
+    {
+        try {
+            $request->validate([
+                'quantity' => 'required|integer|min:0'
+            ]);
+            $product = Product::find($id);
+    
+            if (!$product) {
+                return response()->json(['message' => 'Product not found!'], 404);
+            }
+            $product->update([
+                'quantity' => $product->quantity + $request->quantity
+            ]);
+    
+            return new ProductResource($product);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }

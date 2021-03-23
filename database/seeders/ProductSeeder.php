@@ -25,9 +25,9 @@ class ProductSeeder extends Seeder
             'quantity' => '5'
         ]);
         Product::create([
-            'name' => 'Arroz',
-            'type' => 'Cesta básica',
-            'quantity' => '15'
+            'name' => 'Sabão líquido',
+            'type' => 'Higiene',
+            'quantity' => '2'
         ]);
     }
 }

@@ -19,8 +19,10 @@ use App\Http\Controllers\Api\StateController;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
 Route::prefix('v1')->group(function () {
     Route::resource('products', ProductController::class);
+    Route::put('products/{id}/increments', [ ProductController::class, 'increments' ]);
     
     Route::get('states', [ StateController::class, 'index']);
 });
