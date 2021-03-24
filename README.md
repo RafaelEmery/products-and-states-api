@@ -1,62 +1,62 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+## Products and States API
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A simple API to get, store, update and delete products and to consume an IBGE third party API. This is a real challenge that implements several Laravel and development practices! See this docs below:
 
-## About Laravel
+### Technologies used:
+- [Laravel](https://laravel.com/)
+- [PHPUnit](https://phpunit.de/)
+- [Insomnia](https://insomnia.rest/download)
+- [Visual Studio Code](https://code.visualstudio.com/)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### Checking it out: 
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+First you'll need to clone the repo:
+```
+git clone git@github.com:RafaelEmery/products-and-states-api.git
+```
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Then run the composer and Laravel commands:
+```
+composer install
 
-## Learning Laravel
+php artisan migrate
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+php artisan db:seed
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Don't forget to migrate the testing database:
+```
+php artisan migrate --env=testing
+```
 
-## Laravel Sponsors
+### Tests:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+![](/readme-src/tests.png)
 
-### Premium Partners
+I applied some TDD (Test Driven Development) practices to test my application, so i used Unit tests and Feature tests (Integration tests). To run the tests you simply need to run:
+```
+php artisan test
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/)**
-- **[OP.GG](https://op.gg)**
+You can test using **./vendor/bin/phpunit** too. Artisan commands are just a personal preference :smiley:
 
-## Contributing
+### API Endpoints:
+| Description                       | Route                           | Method | Additional info                                                 |
+|-----------------------------------|---------------------------------|--------|-----------------------------------------------------------------|
+| Get all states                    | api/v1/states                   | GET    | None                                                            |
+| Get all products                  | api/v1/products                 | GET    | None                                                            |
+| Get one product                   | api/v1/products/{id}            | GET    | Id of product.                                                   |
+| Create a product                  | api/v1/products                 | POST   | Need to send on body: 'name', 'type', 'quantity'.               |
+| Update a product                  | api/v1/products/{id}            | PUT    | Id of product Need to send on body: 'name', 'type', 'quantity'. |
+| Delete a product                  | api/v1/products/{id}            | DELETE | Id of product.                                                   |
+| Increment quantity of one product | api/v1/products/{id}/increments | PUT    | Need to send on body: 'quantity'.                               |
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
 
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Other informations and features
+- I used Insomnia for testing the API routes.
+- **ResourceCollection** and **JsonResource** classes to API's response.
+- Added some basic validation to products data.
+- Also created a method to increment (or decrement) the quantity of product.
+- Database seeding and **Factory** classes (using Faker) for testing cases.
+- Laravel simple **Http Client** to make GET requests to third party IBGE API.
+- Semantic commits to improve project organization at versions.
