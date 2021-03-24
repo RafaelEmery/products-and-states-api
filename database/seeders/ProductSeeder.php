@@ -11,8 +11,6 @@ class ProductSeeder extends Seeder
     /**
      * Run the database seeds.
      * 
-     * TODO: Insert multiple products
-     *
      * @return void
      */
     public function run()

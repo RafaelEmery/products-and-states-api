@@ -14,7 +14,7 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Illuminate\Http\Resources\Json\ResourceCollection
      */
     public function index()
     {
@@ -34,7 +34,7 @@ class ProductController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Illuminate\Http\Resources\Json\JsonResource
      */
     public function store(Request $request)
     {   
@@ -56,7 +56,7 @@ class ProductController extends Controller
      * Display the specified resource.
      *
      * @param  $id
-     * @return \Illuminate\Http\Response
+     * @return Illuminate\Http\Resources\Json\JsonResource
      */
     public function show($id)
     {
@@ -77,7 +77,7 @@ class ProductController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  $id
-     * @return \Illuminate\Http\Response
+     * @return Illuminate\Http\Resources\Json\JsonResource
      */
     public function update(Request $request, $id)
     {
@@ -104,7 +104,7 @@ class ProductController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  $id
-     * @return \Illuminate\Http\Response
+     * @return Illuminate\Http\Resources\Json\JsonResource
      */
     public function destroy($id)
     {
@@ -127,7 +127,7 @@ class ProductController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  $id
-     * @return \Illuminate\Http\Response
+     * @return Illuminate\Http\Resources\Json\JsonResource
      */
     public function increments(Request $request, $id)
     {
@@ -141,7 +141,6 @@ class ProductController extends Controller
             if (!$product) {
                 return response()->json(['message' => 'Product not found!'], 404);
             }
-        
             $incrementedQuantity = $calculate->increment($request->quantity);
             $product->update([
                 'quantity' => $incrementedQuantity
