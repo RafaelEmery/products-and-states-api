@@ -29,11 +29,15 @@ Route::prefix('v1')->group(function () {
     Route::get('states', [ StateController::class, 'index']);
 
     Route::prefix('test')->group(function () {
-        Route::get('success-request', function () {
+        Route::get('success', function () {
             return Api::getRequest();
         });
+
+        Route::get('states', function () {
+            return Api::getStates();
+        });
     
-        Route::get('error-request', function () {
+        Route::get('error', function () {
             return Api::getErrorRequest();
         });
     });

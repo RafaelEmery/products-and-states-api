@@ -22,12 +22,12 @@ class ProductSeeder extends Seeder
         Product::create([
             'name' => 'Sabão em pó',
             'type' => 'Limpeza',
-            'quantity' => '5'
+            'quantity' => 5
         ]);
         Product::create([
             'name' => 'Sabão líquido',
             'type' => 'Higiene',
-            'quantity' => '2'
+            'quantity' => 2
         ]);
     }
 }
