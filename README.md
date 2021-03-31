@@ -51,8 +51,20 @@ You can test using **./vendor/bin/phpunit** too. Artisan commands are just a per
 | Delete a product                  | api/v1/products/{id}            | DELETE | Id of product.                                                   |
 | Increment quantity of one product | api/v1/products/{id}/increments | PUT    | Need to send on body: 'quantity'.                               |
 
+### Body example:
+To create and update a product you'll need to send a request (POST or PUT) with a body. I made some additional validation so the types must be:
+```php
+$dataExample = [
+    'name' => 'Sabão em pó', //required|string
+    'type' => 'Limpeza', //required|string
+    'quantity' => 5 //required|integer|min:0
+];
+```
 
-### Other informations and features
+### Seeder consuming IGBE API:
+At class **StateSeeder** in order to fill database with all Brazil's states, it consumes using Laravel Http Client the IBGE API. So you just need to run the seeds and yout 'states' table will have all 27 states.
+
+### Other informations and features:
 - I used Insomnia for testing the API routes.
 - **ResourceCollection** and **JsonResource** classes to API's response.
 - Added some basic validation to products data.
