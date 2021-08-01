@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Controllers;
 
 use App\Models\State;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -8,7 +8,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class StateTest extends TestCase
+class StateControllerTest extends TestCase
 {
     use DatabaseMigrations;
 
@@ -16,7 +16,7 @@ class StateTest extends TestCase
 
     /**
      * Testing the status code of user try to list products without any created.
-     * 
+     *
      * @return void
      */
     public function test_making_get_request_to_list_without_products()
@@ -29,7 +29,7 @@ class StateTest extends TestCase
 
     /**
      * Testing the status code of listing states.
-     * 
+     *
      * @return void
      */
     public function test_making_get_request_to_list_states()

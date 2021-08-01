@@ -1,13 +1,13 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Controllers;
 
 use App\Models\Product;
 use App\Utils\Calculate;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 
-class ProductTest extends TestCase
+class ProductControllerTest extends TestCase
 {
     use DatabaseMigrations;
 
@@ -15,7 +15,7 @@ class ProductTest extends TestCase
 
     /**
      * Testing the status code of user try to list products without any created.
-     * 
+     *
      * @return void
      */
     public function test_making_get_request_to_list_without_products()
@@ -28,7 +28,7 @@ class ProductTest extends TestCase
 
     /**
      * Testing the status code of listing products.
-     * 
+     *
      * @return void
      */
     public function test_making_get_request_to_list_products()
@@ -44,7 +44,7 @@ class ProductTest extends TestCase
 
     /**
      * Testing the status code of list on specific product.
-     * 
+     *
      * @return void
      */
     public function test_making_get_request_to_list_one_product()
@@ -60,7 +60,7 @@ class ProductTest extends TestCase
 
     /**
      * Testing the case that the user try to get a product but it don't exists.
-     * 
+     *
      * @return void
      */
     public function test_making_get_request_to_list_product_that_dont_exists()
@@ -77,7 +77,7 @@ class ProductTest extends TestCase
 
     /**
      * Testing the status code to store a new product
-     * 
+     *
      * @return void
      */
     public function test_making_post_request_to_store_product()
@@ -90,7 +90,7 @@ class ProductTest extends TestCase
 
     /**
      * Testing the post request sending invalid value.
-     * 
+     *
      * @return void
      */
     public function test_making_post_request_to_store_product_with_invalid_data()
@@ -107,7 +107,7 @@ class ProductTest extends TestCase
 
      /**
      * Testing the put request to update a product.
-     * 
+     *
      * @return void
      */
     public function test_making_put_request_to_update_product()
@@ -125,12 +125,12 @@ class ProductTest extends TestCase
         ]);
 
         $response = $this->putJson(self::PRODUCT_URI . '/' . $data->id, $toUpdate);
-        $response->assertOk(); 
+        $response->assertOk();
     }
 
     /**
      * Testing the put request sending invalid value.
-     * 
+     *
      * @return void
      */
     public function test_making_put_request_to_update_product_with_invalid_data()
@@ -148,7 +148,7 @@ class ProductTest extends TestCase
 
     /**
      * Testing the delete request to product.
-     * 
+     *
      * @return void
      */
     public function test_making_delete_request_to_delete_product()
@@ -166,7 +166,7 @@ class ProductTest extends TestCase
 
     /**
      * Testing the incrementing the quantity of a single product with a put request.
-     * 
+     *
      * @return void
      */
     public function test_making_put_request_to_increment_quantity()
@@ -184,12 +184,12 @@ class ProductTest extends TestCase
         ]);
 
         $response = $this->putJson(self::PRODUCT_URI . '/' . $data->id . '/increments', $toIncrement);
-        $response->assertOk(); 
+        $response->assertOk();
     }
 
     /**
      * Testing the incrementing the quantity of a single product with a put request.
-     * 
+     *
      * @return void
      */
     public function test_making_put_request_to_decrement_quantity()
@@ -212,7 +212,7 @@ class ProductTest extends TestCase
 
     /**
      * Testing the incrementing the quantity with a put request sending invalid value
-     * 
+     *
      * @return void
      */
     public function test_making_put_request_to_increments_quantity_with_invalid_data()

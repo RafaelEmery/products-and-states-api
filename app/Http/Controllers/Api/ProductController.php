@@ -11,20 +11,26 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
+    private const PRODUCT_NOT_FOUND = 'Product not found!';
+    private $products;
+
+    public function __construct(Product $products)
+    {
+        $this->products = $products;
+    }
+
     /**
      * Display a listing of the resource.
      *
-     * @return Illuminate\Http\Resources\Json\ResourceCollection
+     * @return mixed
      */
     public function index()
     {
         try {
-            $products = Product::all();
-
-            if ($products->count() == 0) {
+            if (($allProducts = $this->products::all())->count() === 0) {
                 return response()->json(['message' => 'No products on database!'], 404);
             }
-            return new ProductCollection($products);
+            return new ProductCollection($allProducts);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
@@ -34,19 +40,18 @@ class ProductController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return Illuminate\Http\Resources\Json\JsonResource
+     * @return mixed
      */
     public function store(Request $request)
-    {   
+    {
         try {
             $request->validate([
                 'name' => 'required|string|max:120',
                 'type' => 'required|string|max:20',
                 'quantity' => 'required|integer|min:0'
             ]);
-            $product = Product::create($request->all());
-    
-            return new ProductResource($product);
+
+            return new ProductResource($this->products->create($request->all()));
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
@@ -56,16 +61,14 @@ class ProductController extends Controller
      * Display the specified resource.
      *
      * @param  $id
-     * @return Illuminate\Http\Resources\Json\JsonResource
+     * @return mixed
      */
     public function show($id)
     {
         try {
-            $product = Product::find($id);
-
-            if (!$product) {
-                return response()->json(['message' => 'Product not found!'], 404);
-            } 
+            if (!$product = $this->products->find($id)) {
+                return response()->json(['message' => self::PRODUCT_NOT_FOUND], 404);
+            }
             return new ProductResource($product);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
@@ -77,7 +80,7 @@ class ProductController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  $id
-     * @return Illuminate\Http\Resources\Json\JsonResource
+     * @return mixed
      */
     public function update(Request $request, $id)
     {
@@ -87,10 +90,10 @@ class ProductController extends Controller
                 'type' => 'required|string|max:20',
                 'quantity' => 'required|integer|min:0'
             ]);
-            $product = Product::find($id);
 
-            if (!$product) {
-                return response()->json(['message' => 'Product not found!'], 404);
+
+            if (!$product = $this->products->find($id)) {
+                return response()->json(['message' => self::PRODUCT_NOT_FOUND], 404);
             }
             $product->update($request->all());
 
@@ -104,16 +107,16 @@ class ProductController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  $id
-     * @return Illuminate\Http\Resources\Json\JsonResource
+     * @return mixed
      */
     public function destroy($id)
     {
         try {
-            $product = Product::find($id);
+            $product = $this->products->find($id);
 
             if (!$product) {
-                return response()->json(['message' => 'Product not found!'], 404);
-            } 
+                return response()->json(['message' => self::PRODUCT_NOT_FOUND], 404);
+            }
             $product->delete();
 
             return response()->json(['message' => 'Product deleted!'], 200);
@@ -127,7 +130,7 @@ class ProductController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  $id
-     * @return Illuminate\Http\Resources\Json\JsonResource
+     * @return mixed
      */
     public function increments(Request $request, $id)
     {
@@ -135,17 +138,15 @@ class ProductController extends Controller
             $request->validate([
                 'quantity' => 'required|integer'
             ]);
-            $product = Product::find($id);
-            $calculate = new Calculate($product->quantity);
-    
-            if (!$product) {
-                return response()->json(['message' => 'Product not found!'], 404);
+
+            if (!$product = $this->products->find($id)) {
+                return response()->json(['message' => self::PRODUCT_NOT_FOUND], 404);
             }
-            $incrementedQuantity = $calculate->increment($request->quantity);
+            $calculate = new Calculate($product->quantity);
             $product->update([
-                'quantity' => $incrementedQuantity
+                'quantity' => $calculate->increment($request->quantity)
             ]);
-            
+
             return new ProductResource($product);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);

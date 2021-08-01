@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Unit\Utils;
 
 use Tests\TestCase;
 
@@ -9,8 +9,8 @@ class ApiTest extends TestCase
     const API_URI = 'api/v1/test';
 
     /**
-     * Testing successful get request to external API. 
-     * 
+     * Testing successful get request to external API.
+     *
      * @return void
      */
     public function test_making_get_request_to_external_api()
@@ -21,7 +21,7 @@ class ApiTest extends TestCase
 
     /**
      * Testing if IBGE api returns 27 states on request
-     * 
+     *
      * @return void
      */
     public function test_the_number_of_states_returned_by_external_api()
@@ -32,7 +32,7 @@ class ApiTest extends TestCase
 
     /**
      * Testing wrong get request to external API.
-     * 
+     *
      * @return void
      */
     public function test_making_wrong_get_request_to_external_api()
